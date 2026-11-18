@@ -1,0 +1,10 @@
+# macOS & Editor files
+.DS_Store
+*.swp
+*~
+.vscode/
+.idea/
+
+# Internal outreach & directory submission SOP (do not publish to public repo)
+docs/
+*internal*
