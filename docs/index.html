@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>2026 中国开发者与企业团队 AI 订阅开通、风控排雷与财务报销实操指南</title>
+  <meta name="description" content="面向中国开发者、高校课题组与研发团队的 ChatGPT Plus / Pro (5x / 20x) 及 Codex 订阅实操手册：对比海外卡、美区礼品卡、合租与 Session JSON 风险，详解国内数电增值税普票与 6% 专票对公报销规范。" />
+  <meta name="keywords" content="ChatGPT Plus 国内开通, ChatGPT 企业报销开发票, ChatGPT Pro 100 5x, ChatGPT Pro 200 20x, Codex 额度对比, WildCard 停服替代, Session JSON 风险, 增值税专用发票" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+  <meta property="og:type" content="article" />
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:title" content="2026 中国开发者与企业团队 AI 订阅开通、风控排雷与财务报销实操指南" />
+  <meta property="og:description" content="系统拆解五种 AI 订阅开通路径的安全边界、Session Token 暴露风险、Plus/5x/20x 算力选型及国内数电普票与 6% 专票合规入账方案。" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "headline": "2026 中国开发者与企业团队 AI 订阅开通、风控排雷与财务报销实操指南",
+        "description": "面向中国开发者、高校课题组与研发团队的 ChatGPT Plus / Pro (5x / 20x) 及 Codex 订阅实操手册：对比海外卡、美区礼品卡、合租与 Session JSON 风险，详解国内数电增值税普票与 6% 专票对公报销规范。",
+        "inLanguage": "zh-CN",
+        "datePublished": "2026-11-18",
+        "dateModified": "2026-11-18",
+        "author": {
+          "@type": "Organization",
+          "name": "CN AI Engineering Handbook Contributors"
+        },
+        "about": [
+          "ChatGPT Plus",
+          "ChatGPT Pro",
+          "OpenAI Codex",
+          "企业财务增值税发票报销",
+          "账号风控安全"
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "为什么不建议向第三方自动代充网站粘贴 chatgpt.com/api/auth/session 的 JSON 内容？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "api/auth/session 返回的 JSON 中包含当前登录态的完整 accessToken（Bearer Token）。一旦交给黑盒第三方服务器，对方可在有效期内绕过密码与两步验证（2FA）直接访问账号接口并读取历史会话。安全做法是仅采用无需密码且绝不索取 Session JSON 的开通方式。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "OpenAI 官方 Stripe 收据或代充网站的英文 PDF Invoice 能在国内公司财务报销吗？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "绝大多数国内企业与高校科研财务系统不认可无全国统一 20 位数电票号的境外英文商业账单（Commercial Invoice），因为无法在国家税务总局电子税务局验真查重，也无法直接抵扣增值税进项税。公费报销应选择能开具国内有限公司数电增值税普通发票（1–4 席）或 6% 增值税专用发票（支持对公转账与采购合同）的合规服务渠道。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "ChatGPT Plus ($20)、5x / Pro 100 ($100) 与 20x / Pro 200 ($200) 应该如何选择？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "日常问答与轻量编码选 Plus ($20/月)；全职工程师高频使用 Codex 进行多文件重构且曾遇到 Plus 滚动限流，优先选 5x / Pro 100 ($100/月)，性价比最高；全天候多仓库并行 Agent 编排与深度科研推理选 20x / Pro 200 ($200/月)。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "原 WildCard 等虚拟卡停服后，原有 ChatGPT 账号里的对话记录怎么保留续费？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "虚拟卡停服断订只会让账号回退至 Free 状态，不会删除历史对话、Projects 或 GPTs。只需登录原账号取消旧卡自动扣费重试，确认注册邮箱可正常收信后，通过美区 Apple ID 官方礼品卡或免密一对一协助开通方案即可在原号无缝恢复订阅。"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-muted: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-secondary: #475569;
+      --accent: #0f766e;
+      --accent-hover: #115e59;
+      --accent-soft: #f0fdfa;
+      --warn-bg: #fffbeb;
+      --warn-border: #f59e0b;
+      --warn-text: #92400e;
+      --danger-bg: #fef2f2;
+      --danger-border: #ef4444;
+      --danger-text: #991b1b;
+      --code-bg: #0f172a;
+      --code-text: #e2e8f0;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.72;
+      font-size: 16px;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      font-weight: 500;
+    }
+    a:hover { color: var(--accent-hover); }
+
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #134e4a 100%);
+      color: #f8fafc;
+      padding: 3.2rem 1.5rem 2.8rem;
+      border-bottom: 1px solid #1e293b;
+    }
+    .hero-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.78rem;
+      padding: 0.22rem 0.68rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #ccfbf1;
+      border: 1px solid rgba(204, 251, 241, 0.25);
+    }
+    .hero h1 {
+      margin: 0 0 0.85rem;
+      font-size: clamp(1.55rem, 3.2vw, 2.25rem);
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+    .hero p {
+      margin: 0;
+      max-width: 860px;
+      color: #cbd5e1;
+      font-size: 1rem;
+    }
+
+    .layout {
+      max-width: 1120px;
+      margin: 2rem auto 4rem;
+      padding: 0 1.25rem;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .toc {
+      position: sticky;
+      top: 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.15rem;
+    }
+    .toc-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-secondary);
+      margin: 0 0 0.75rem;
+    }
+    .toc ol {
+      margin: 0;
+      padding-left: 1.15rem;
+      font-size: 0.9rem;
+    }
+    .toc li { margin-bottom: 0.5rem; }
+    .toc a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .toc a:hover { color: var(--accent); }
+
+    main {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem 2.2rem;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    }
+
+    section {
+      margin-bottom: 2.75rem;
+      scroll-margin-top: 1.2rem;
+    }
+    section:last-child { margin-bottom: 0; }
+
+    h2 {
+      font-size: 1.35rem;
+      margin: 0 0 1rem;
+      padding-bottom: 0.55rem;
+      border-bottom: 2px solid var(--surface-muted);
+      color: var(--text);
+    }
+    h3 {
+      font-size: 1.08rem;
+      margin: 1.4rem 0 0.65rem;
+      color: var(--text);
+    }
+    p { margin: 0 0 1rem; }
+
+    .callout {
+      border-radius: 10px;
+      padding: 1rem 1.15rem;
+      margin: 1.15rem 0;
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+    }
+    .callout.warn {
+      background: var(--warn-bg);
+      border-left-color: var(--warn-border);
+      color: var(--warn-text);
+    }
+    .callout.danger {
+      background: var(--danger-bg);
+      border-left-color: var(--danger-border);
+      color: var(--danger-text);
+    }
+    .callout strong { color: inherit; }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin: 1.1rem 0 1.35rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      min-width: 640px;
+    }
+    th, td {
+      padding: 0.78rem 0.9rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th {
+      background: var(--surface-muted);
+      font-weight: 700;
+      color: var(--text);
+    }
+    tr:last-child td { border-bottom: none; }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 1rem 1.2rem;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-size: 0.87rem;
+      line-height: 1.55;
+      margin: 1rem 0;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88em;
+      background: var(--surface-muted);
+      padding: 0.14rem 0.38rem;
+      border-radius: 5px;
+    }
+    pre code {
+      background: transparent;
+      padding: 0;
+      color: inherit;
+    }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0;
+    }
+    .checklist li {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      padding: 0.8rem 0.95rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 0.65rem;
+      background: #fcfcfd;
+    }
+    .checklist input[type="checkbox"] {
+      margin-top: 0.3rem;
+      width: 1.05rem;
+      height: 1.05rem;
+      accent-color: var(--accent);
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .check-status {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    details {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem 1.05rem;
+      margin-bottom: 0.7rem;
+      background: #fcfcfd;
+    }
+    summary {
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text);
+    }
+    details p {
+      margin: 0.7rem 0 0;
+      color: var(--text-secondary);
+    }
+
+    footer {
+      max-width: 1120px;
+      margin: 0 auto 3rem;
+      padding: 0 1.25rem;
+      color: var(--text-secondary);
+      font-size: 0.86rem;
+      text-align: center;
+    }
+
+    @media (max-width: 880px) {
+      .layout { grid-template-columns: 1fr; }
+      .toc { position: static; }
+      main { padding: 1.4rem 1.15rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="badge-row">
+        <span class="badge">开源实操指南 · 2026-11 修订版</span>
+        <span class="badge">安全红线：零密码 · 零 Session JSON 暴露</span>
+        <span class="badge">财务合规：数电普票 &amp; 6% 增值税专票对公规范</span>
+      </div>
+      <h1>2026 中国开发者与企业团队 AI 订阅开通、风控排雷与财务报销实操指南</h1>
+      <p>系统梳理跨境信用卡、美区 Apple ID 礼品卡、共享合租风险、自动代充 Session Token 隐患及免密一对一企业集采方案，帮助研发个人与技术团队安全获取 ChatGPT Plus / 5x / 20x 算力并合规完成国内财务入账。</p>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="toc" aria-label="章节导航">
+      <p class="toc-title">手册目录</p>
+      <ol>
+        <li><a href="#paths">五种主流开通路径对比</a></li>
+        <li><a href="#session-risk">Session JSON 泄露排雷</a></li>
+        <li><a href="#finance-invoice">国内财务报销与数电票深潜</a></li>
+        <li><a href="#plan-matrix">Plus / 5x / 20x 与 Codex 对比</a></li>
+        <li><a href="#ban-checklist">微软邮箱与封号前置自检</a></li>
+        <li><a href="#wildcard-migration">虚拟卡停服平滑迁移</a></li>
+        <li><a href="#faq">高频问题解答 (FAQ)</a></li>
+      </ol>
+    </aside>
+
+    <main>
+      <section id="paths">
+        <h2>一、五种主流开通路径全景对比（安全性 · 成本 · 财务合规）</h2>
+        <p>自多批跨境虚拟卡平台清退停服后，国内开发者在订阅 ChatGPT 高阶算力时主要分化为以下 5 条路径。选型前应同时评估<strong>账号隐私主权、风控存活率与国内公司财务入账要求</strong>：</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>开通路径</th>
+                <th>隐私与账号主权</th>
+                <th>是否需交密码或 Session JSON</th>
+                <th>月均参考成本 (Plus)</th>
+                <th>国内报销合规性</th>
+                <th>适用场景与核心风险</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. 本人海外实体信用卡</strong><br><a href="https://openai.com/chatgpt/pricing/">OpenAI 官方定价页</a></td>
+                <td>本人独享账号，完全隔离</td>
+                <td>否（官方 Stripe）</td>
+                <td>$20/月（约 ¥145）</td>
+                <td>仅英文 Stripe 收据，无国内税监章</td>
+                <td>适合持有港澳/海外实体卡且无需国内税票的个人；需保持账单国与网络出口一致。</td>
+              </tr>
+              <tr>
+                <td><strong>2. 美区 Apple ID + 正规礼品卡</strong><br><a href="https://support.apple.com/zh-cn/118429">Apple 官方礼品卡指南</a></td>
+                <td>本人独享账号，iOS 内购扣费</td>
+                <td>否（本人设备内完成）</td>
+                <td>约 ¥148–¥168/月</td>
+                <td>仅 Apple 英文邮件收据，无法入国内税账</td>
+                <td>适合有 iPhone/iPad 的个人自用；切勿贪便宜购买来源不明的低价黑卡以免封禁 Apple ID。</td>
+              </tr>
+              <tr>
+                <td><strong>3. 多人共享号 / 镜像合租站</strong></td>
+                <td><strong>多人共用母号，对话与上传文件无隔离</strong></td>
+                <td>无需自有号，但输入内容对号主/同车可见</td>
+                <td>¥25–¥65/月</td>
+                <td>多无正规税票或类目不符</td>
+                <td><strong>严禁输入业务源码、内部文档与未发表论文</strong>；高频触发并发限流与模型降智。</td>
+              </tr>
+              <tr>
+                <td><strong>4. 自助粘贴 Session JSON 代充</strong></td>
+                <td>本人账号，但<strong>交出了登录态最高凭证</strong></td>
+                <td><strong>需要</strong>（提取 <code>api/auth/session</code>）</td>
+                <td>¥155–¥189/月</td>
+                <td>多仅提供后台英文商业 PDF Invoice</td>
+                <td><strong>存在会话劫持与机房 IP 池关联风控隐患</strong>；英文商业收据常被国内企业财务退回。</td>
+              </tr>
+              <tr>
+                <td><strong>5. 免密一对一协助开通 + 国内税票</strong><br>代表参考：<a href="https://payforgpt.com/price">PayForGPT 方案与价格页</a></td>
+                <td>本人独享账号，物理隔离密码与会话状态</td>
+                <td><strong>全程免密，绝不索取 Session JSON</strong></td>
+                <td>Plus 约 ¥160/月（含国内普票 0 加点）</td>
+                <td><strong>国内有限公司数电普票 / 6% 增值税专票（支持对公）</strong></td>
+                <td>适合重视账号安全边界的开发者、公费报销员工及 5 席以上企业集中采购团队。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="session-risk">
+        <h2>二、高危技术排雷：为什么严禁向陌生网页提交 <code>api/auth/session</code> 完整 JSON？</h2>
+        <p>不少自助代充站打着“免密码直充”旗号，要求用户登录后打开 <code>https://chatgpt.com/api/auth/session</code> 并把整段 JSON 粘贴进第三方网页，甚至制作“在线 Token 检测器”收集会话数据。</p>
+        <pre><code>{
+  "user": { "id": "user-xxxxxxxx", "email": "engineer@company.com" },
+  "expires": "2026-12-15T08:00:00.000Z",
+  "accessToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6..." // 高危：等同于免 2FA 的活跃登录令牌！
+}</code></pre>
+        <div class="callout danger">
+          <strong>安全工程警告：交出 <code>accessToken</code> = 交出免两步验证的账号读写控制权</strong><br>
+          即使你的账号已开启二次验证（2FA），在 <code>accessToken</code> 有效期内，任何留存该字段的第三方服务端都可以直接调用会话接口读取历史记录或执行敏感操作，且黑盒网页所谓的“前端本地脱敏”无法被用户独立审计。
+        </div>
+        <p><strong>安全准则</strong>：辅助开通订阅时应坚持<strong>“不给密码 + 不给 Session JSON”</strong>双红线。若想在购买前排查账号自身的邮箱风控或旧订阅冲突，建议仅使用零网络上传的纯前端工具，例如 <a href="https://payforgpt.com/tools/account-precheck">ChatGPT 充值前 30 秒账号安全与风控本地自检器</a>（仅选择邮箱后缀类型与订阅状态，无需输入完整邮箱账号或任何凭证）。</p>
+      </section>
+
+      <section id="finance-invoice">
+        <h2>三、企业财务报销深潜：为什么 Stripe 收据与英文 PDF Invoice 频频被退单？</h2>
+        <p>国内研发团队在公费采购 AI 工具时，最常见的踩坑是拿着境外 Stripe Receipt 或代充站后台自动生成的英文 PDF Invoice 去走 OA 报销，结果在财务初审阶段即被驳回。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>财务核验维度</th>
+                <th>海外 Stripe Receipt / 第三方英文 PDF Invoice</th>
+                <th>国内合规服务商数电普票 / 6% 增值税专票</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>税务局系统查验真伪</strong></td>
+                <td>无 20 位数电发票号，无法在<a href="https://etax.chinatax.gov.cn/">全国统一规范电子税务局</a>验真</td>
+                <td>具备国家税务总局标准 20 位数电票号，支持财务系统自动扫码/XML 验真查重</td>
+              </tr>
+              <tr>
+                <td><strong>纳税人识别号规范</strong></td>
+                <td>仅英文自由文本抬头，无 18 位统一社会信用代码税控校验</td>
+                <td>标准写入公司全称与 18 位纳税人识别号，符合企业所得税税前扣除凭证管理办法</td>
+              </tr>
+              <tr>
+                <td><strong>进项税额抵扣与结算</strong></td>
+                <td>无增值税抵扣联；员工私卡垫付美元常缺付汇完税材料</td>
+                <td>一般纳税人取得 <strong>6% 增值税专用发票</strong>可按规定抵扣进项税；支持公对公银行转账与合同归档</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout">
+          <strong>实操建议（个人 1–4 席 vs 团队 5 席+）：</strong>
+          <ul>
+            <li><strong>1–4 席公务卡/支付宝报销</strong>：优先核实是否支持<strong>按商品原价开具国内增值税普通发票（0 税点加价、当天开出）</strong>，并确认发票为国内有限公司开具的软件/信息技术服务合规类目（如实向财务说明属于国内服务商采购服务发票，非餐饮办公替票）。</li>
+            <li><strong>5 席及以上研发团队集采</strong>：可通过 <a href="https://payforgpt.com/qiye-caigou">企业对公采购与 6% 专票通道</a> 统一签署电子签/盖章合同并对公打款（如 <code>ChatGPT 20x</code> 5 席起按 ¥1,520/席含 6% 专票，分席免密开通至成员本人账号）。</li>
+            <li><strong>报销前先找财务确认</strong>：使用 <a href="https://payforgpt.com/tools/invoice-reimbursement-check">企业/个人报销开票合规自查与预算单生成器</a> 一键生成采购说明单发给财务预审，确认可入账后再下单。</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="plan-matrix">
+        <h2>四、2026 算力档位实测对比：<code>Plus ($20)</code> vs <code>5x / Pro 100 ($100)</code> vs <code>20x / Pro 200 ($200)</code></h2>
+        <p>结合 <a href="https://help.openai.com/">OpenAI 官方帮助中心</a> 公布的档位结构与一线工程师 Codex 使用反馈，三大主力档位选型边界如下：</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>评估维度</th>
+                <th>ChatGPT Plus ($20/月)</th>
+                <th>ChatGPT 5x / Pro 100 ($100/月)</th>
+                <th>ChatGPT 20x / Pro 200 ($200/月)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>核心配额梯度</strong></td>
+                <td>标准个人生产力基准档</td>
+                <td><strong>主力研发黄金档</strong>（对齐官方 $100 Pro 100，约 5 倍核心配额）</td>
+                <td><strong>重度全栈与科研满血档</strong>（对齐官方 $200 Pro 200，20 倍级上限）</td>
+              </tr>
+              <tr>
+                <td><strong>Codex 工程表现</strong></td>
+                <td>适合单文件问答与轻量脚本；连续多轮大型仓库任务易遇滚动窗口限额</td>
+                <td>覆盖全职开发日常 PR 评审、测试生成与跨模块重构，工作日极少卡限额</td>
+                <td>支撑多仓库并发 Agent 编排、超长上下文架构推演与高频自动化流水线</td>
+              </tr>
+              <tr>
+                <td><strong>国内含票参考价</strong></td>
+                <td>约 ¥160/月（含国内普票）</td>
+                <td>约 ¥849/月（含国内普票）</td>
+                <td>零售约 ¥1,499/月；5 席起 ¥1,520/席含 6% 专票（<a href="https://payforgpt.com/price">实时目录核对</a>）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="ban-checklist">
+        <h2>五、封号与拒付前置排雷：<code>Outlook/Hotmail/Live</code> 批量号源与环境自检清单</h2>
+        <p>在升级高价值套餐（尤其是 <code>5x</code> 与 <code>20x</code>）前，请勾选核对以下 5 项高危排雷指标：</p>
+        <div class="check-status" id="check-progress">已完成自检：0 / 5 项</div>
+        <ul class="checklist" id="precheck-list">
+          <li>
+            <input type="checkbox" id="chk-1" />
+            <label for="chk-1"><strong>拒绝低价接码微软系成品号</strong>：第三方发卡网几元买来的批量注册 <code>@outlook.com</code> / <code>@hotmail.com</code> / <code>@live.com</code> / <code>@msn.com</code> 账号属于上游反滥用清退头号重灾区。主力订阅务必绑定本人长期自用且开启 2FA 的 Gmail、iCloud 或正规企业邮箱。</label>
+          </li>
+          <li>
+            <input type="checkbox" id="chk-2" />
+            <label for="chk-2"><strong>避开超售公共代理节点</strong>：不在短时间内横跨美、日、欧多个地区频繁切换 IP，避免触发异地风控导致高阶推理模型降智。</label>
+          </li>
+          <li>
+            <input type="checkbox" id="chk-3" />
+            <label for="chk-3"><strong>清理旧渠道在途续费冲突</strong>：若曾开启 App Store 内购且处于扣款重试宽限期，先在 Apple ID 订阅设置中关闭旧续费，防止付完款仍显示 Free。</label>
+          </li>
+          <li>
+            <input type="checkbox" id="chk-4" />
+            <label for="chk-4"><strong>停止连续试错已拒付卡段</strong>：同一账号连续 3 次出现 <code>Card Declined</code> 会显著抬高欺诈评分，应静置 24–48 小时后再通过稳妥渠道开通。</label>
+          </li>
+          <li>
+            <input type="checkbox" id="chk-5" />
+            <label for="chk-5"><strong>完成零上传账号环境预检</strong>：下单前已在 <a href="https://payforgpt.com/tools/account-precheck">账号风控前置自检工具</a> 核对邮箱类型与当前订阅状态。</label>
+          </li>
+        </ul>
+      </section>
+
+      <section id="wildcard-migration">
+        <h2>六、原虚拟卡（WildCard 等）停服断订后的平滑迁移步骤</h2>
+        <p>原虚拟卡停服导致续费中断时，账号内的历史对话、Projects 与自定义指令均完好保留，无需重新注册新号：</p>
+        <ol>
+          <li><strong>解除失效虚拟卡自动续费</strong>：在 ChatGPT <code>Settings → Subscription</code> 中取消旧卡重试（若已回退为 <code>Free</code> 则直接进入下一步）。</li>
+          <li><strong>验证原邮箱收信可用性</strong>：确保原邮箱仍可正常接收 OpenAI 邮件；若原邮箱为已停用域名邮箱，请先迁移核心资料至本人可控邮箱。</li>
+          <li><strong>切换长期合规续费方式</strong>：个人自用且有美区设备可切换至美区 Apple ID 正规礼品卡；需支付宝/对公结算或国内增值税发票可选择免密一对一协助开通（见 <a href="https://payforgpt.com/price">PayForGPT 服务与开票说明</a>）。</li>
+        </ol>
+      </section>
+
+      <section id="faq">
+        <h2>七、高频问题解答（FAQ）</h2>
+        <details open>
+          <summary>1. 免密一对一协助开通和自助粘贴 Session JSON 代充的核心区别是什么？</summary>
+          <p>粘贴 Session JSON 需要将包含活跃 <code>accessToken</code> 的完整登录凭证交给第三方服务器；而免密一对一协助开通既不索取账号密码，也不收集 <code>api/auth/session</code> 会话凭证，从物理边界上杜绝了会话令牌滞留或泄露风险。</p>
+        </details>
+        <details>
+          <summary>2. 国内数电普票和 6% 增值税专票分别适合多大团队？</summary>
+          <p>1–4 人的小微研发组或个人公费报销，直接按商品原价开具国内增值税普通发票（0 加点）最为省心；5 席及以上的企业研发部门（尤其是批量采购 <code>ChatGPT 20x</code>），选择含 6% 增值税专票 + 对公银行转账 + 采购合同的集采方案，既能合规抵扣进项税，也便于统一管理席位台账。</p>
+        </details>
+        <details>
+          <summary>3. 为什么刚充值的账号会出现“降智”或高阶推理变慢？</summary>
+          <p>绝大多数“降智”并非套餐本身缩水，而是当前浏览器出口 IP 被大量用户共用（高欺诈风险评分），导致平台动态下调计算资源或触发安全降级。更换纯净固定地区网络节点并重新登录即可恢复正常。</p>
+        </details>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <p>开源文档许可：MIT License · 本指南仅作技术选型与财务合规实务参考，所涉第三方品牌商标归各自权利人所有。</p>
+  </footer>
+
+  <script>
+    (function () {
+      var boxes = document.querySelectorAll('#precheck-list input[type="checkbox"]');
+      var status = document.getElementById('check-progress');
+      function update() {
+        var checked = 0;
+        for (var i = 0; i < boxes.length; i++) {
+          if (boxes[i].checked) checked++;
+        }
+        status.textContent = '已完成自检：' + checked + ' / ' + boxes.length + ' 项' + (checked === boxes.length ? '（环境健康，可安全开通订阅）' : '');
+      }
+      for (var j = 0; j < boxes.length; j++) {
+        boxes[j].addEventListener('change', update);
+      }
+    })();
+  </script>
+</body>
+</html>
