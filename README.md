@@ -1,174 +1,183 @@
-# 2026 国内个人与研发团队 ChatGPT Plus / Pro (5x·20x) / Codex 订阅、防封自查与国内增值税发票报销完全指南
+# 2026 ChatGPT Plus / Pro (5x·20x) / Codex 排障百科、防封自检与国内增值税发票报销指南（中英双语版）
+
+> **Language / 语言切换**：[**中文版 (README.md)**](./README.md) | [**English Edition (README_EN.md)**](./README_EN.md)
 
 [![Last Verified](https://img.shields.io/badge/最新核实-2026--11-0f766e)](./README.md)
+[![Bilingual](https://img.shields.io/badge/Bilingual-中文%20%2B%20English-2563eb)](./README_EN.md)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-blue.svg)](./LICENSE)
-[![Target Audience](https://img.shields.io/badge/适用人群-国内工程师%20%7C%20高校课题组%20%7C%20企业研发与财务-1d4ed8)](./guides/domestic-vat-invoice-reimbursement.md)
 
-> **定位与利益相关声明**：本仓库是一份面向国内开发者、高校实验室课题组与企业 IT/财务采购人员的实战开源参考手册，重点解决 **2026 年 OpenAI 新档位（Plus / Pro 100·5x / Pro 200·20x / Codex）选型**、**`api/auth/session` 会话凭证安全边界**、**Outlook/停服虚拟卡历史账号排雷** 以及 **国内增值税数电发票合规入账报销** 四大真实痛点。文中涉及第三方免密协助开通与国内开票实操的部分以独立第三方服务 **PayForGPT** 为参照（PayForGPT 非 OpenAI 官方或隶属机构），其余路径（美区 Apple 内购、海外实体卡、自助 Token 站）均按客观事实陈述优缺点。欢迎通过 Issue / PR 补充最新财税或风控实测案例。
+> **独立第三方与合规声明**：本开源百科由面向国内工程师、高校科研课题组与企业研发团队的实战排障记录整理维护。文中涉及免密协助开通与国内数电发票开具的实操方案，以独立第三方数字订阅服务 **[PayForGPT](https://payforgpt.com/?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)**（[English Portal](https://payforgpt.com/en?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)）作为参照样本。**PayForGPT 非 OpenAI 官方或隶属机构**；其余路径（美区 Apple 内购、海外实体卡、自助 Session 站）均基于客观事实与合规边界陈述。
 
 ---
 
-## 🧭 30 秒场景直达目录
+## 🧭 12 大高频故障与采购排障速查索引
 
-| 你的当前场景 | 仓库内深度分册 | 配套在线自检 / 核验入口 |
+| 章节 | 高频报错 / 核心痛点 | 直达本页排查 | 免费在线自检 / 对照入口 |
+| :--- | :--- | :--- | :--- |
+| **01** | `Your card has been declined` / `Payment was not approved` | [跳转第 1 节](#1-your-card-has-been-declined--payment-was-not-approved官网绑卡拒付与-3ds-排查) | [Card Declined 排查指南](https://payforgpt.com/help/card-declined?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) |
+| **02** | `Paid but still showing Free tier` | [跳转第 2 节](#2-paid-but-still-showing-free-tier已付款仍显示-free-免费版恢复步骤) | [恢复购买与状态对齐](https://payforgpt.com/help/chatgpt-paid-still-free-restore?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) |
+| **03** | `WildCard / virtual card shutdown migration` | [跳转第 3 节](#3-wildcard--virtual-card-shutdown-migration停服虚拟卡与苹果内购迁移) | [多路径成本与风控对比](https://payforgpt.com/compare?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) |
+| **04** | `Apple ID US Gift Card FX & tax loss vs Domestic VAT invoice` | [跳转第 4 节](#4-apple-id-us-gift-card-fx--tax-loss-vs-domestic-vat-invoice美区礼品卡隐性成本对比) | [实时人民币价格与档位表](https://payforgpt.com/price?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) |
+| **05** | `Why pasting api/auth/session JSON to automated sites risks account takeover` | [跳转第 5 节](#5-why-pasting-apiauthsession-json-to-automated-sites-risks-account-takeover会话凭证安全红线) | [Session 免密安全边界](https://payforgpt.com/ai-subscriptions/chatgpt-session-token-passwordless-safety-check?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) |
+| **06** | `Outlook / Hotmail batch email risk pre-check` | [跳转第 6 节](#6-outlook--hotmail-batch-email-risk-pre-check批量接码邮箱风控自检) | [30 秒账号风控自检器](https://payforgpt.com/tools/account-precheck?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) |
+| **07** | `Codex CLI 5x (Pro 100) vs 20x (Pro 200) quota & rate limit troubleshooting` | [跳转第 7 节](#7-codex-cli-5x-pro-100-vs-20x-pro-200-quota--rate-limit-troubleshooting限流与选型) | [Codex 配额与重置指南](https://payforgpt.com/ai-subscriptions/codex-usage-limit-reset-plus-pro-guide?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) |
+| **08** | `China 0%-markup digital VAT ordinary invoice vs 6% special VAT invoice for 5+ seats` | [跳转第 8 节](#8-china-0-markup-digital-vat-ordinary-invoice-vs-6-special-vat-invoice-for-5-seats国内普票与专票) | [报销合规自查器](https://payforgpt.com/tools/invoice-reimbursement-check?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) · [预算试算台](https://payforgpt.com/qiye-caigou#procurement-calculator) |
+| **09** | `Account deactivated` 与多人共用防封红线 | [跳转第 9 节](#9-account-deactivated-与多人共用账号防封边界) | [免费本地工具合集](https://payforgpt.com/tools?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) |
+| **10** | `QQ / 163` 邮箱串号登录与 Codex 手机验证排查 | [跳转第 10 节](#10-qq--163-邮箱串号登录与-codex-手机验证排查) | [邮箱与登录方式核对](https://payforgpt.com/tools/account-precheck?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) |
+| **11** | 取消自动续费、`Plus → Pro` 升档规则与已开发票红冲 | [跳转第 11 节](#11-取消自动续费升档覆盖规则与已开发票红冲流程) | [企业集采与合同说明](https://payforgpt.com/qiye-caigou?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) |
+| **12** | 订单凭证核验、唯一官方微信防李鬼与 30 天售后边界 | [跳转第 12 节](#12-订单凭证核验唯一官方微信防骗与-30-天售后边界) | [身份核验](https://payforgpt.com/verify?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) · [查单页](https://payforgpt.com/order?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) |
+
+---
+
+## 1. Your card has been declined / Payment was not approved（官网绑卡拒付与 3DS 排查）
+
+在 `chatgpt.com` 结算页直接绑定银行卡时，最常见的阻断提示包括 `Your card has been declined`、`Your card does not support this type of purchase` 以及 `We were unable to authenticate your payment method / Payment was not approved`。
+
+### 常见根因与排查顺序
+1. **发卡行 BIN 与地区不匹配**：国内银行发行的单标银联卡或部分大陆双币信用卡被 Stripe 风控规则直接拦截，且账单地址（Billing Address）与代理出口 IP 所在国家不一致会触发即时拒付。
+2. **3D Secure (3DS) 超时或风控锁**：连续尝试更换同一张卡提交超过 3 次后，Stripe 会在当前账号层面挂起临时冷却锁，继续盲试只会进一步拉高风控评分。
+3. **残余虚拟卡段连坐**：大量曾被用于批量注册或风控拒付率过高的预付虚拟卡 BIN 段已被上游永久拉黑。
+
+### 可执行替代方案
+- 若你没有合规海外实体银行卡，**切勿反复用高危卡段重试**，可先查看 [Card Declined 逐项排查页](https://payforgpt.com/help/card-declined?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)。
+- 需要免去境外绑卡步骤时，可在 [PayForGPT 实时价格页](https://payforgpt.com/price?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) 选择对应档位（`Plus` ¥160 / `5x` ¥849 / `20x` ¥1,499），通过**支付宝**或**对公银行转账**下单，付款后加唯一官方微信 `siuserxiaowei` 一对一免密协助开通至本人独立账号。
+
+---
+
+## 2. Paid but still showing Free tier（已付款仍显示 Free 免费版恢复步骤）
+
+扣款成功或收到协助开通完成通知后，刷新 `chatgpt.com` 左下角依然显示 `Free` 或按钮仍提示 `Upgrade to Plus`，**90% 属于本地缓存未刷新或登录入口串号**，请先按以下步骤排查（切勿重复下单付款）：
+
+1. **核对登录方式是否串号**：确认当前浏览器使用的是「邮箱 + 密码」登录，还是「Continue with Google / Apple / Microsoft」快捷登录——即便邮箱字符相同，若你曾用两种认证方式建过独立账号或组织切换，很容易看错账户。
+2. **强制登出并清缓存重登**：点击左下角头像 → `Log out` → 关闭所有 `chatgpt.com` 标签页后重新打开并登录；iOS / Android App 请彻底划掉后台进程重进，并在订阅设置页尝试点击 `Restore purchases`。
+3. **核对订单进度**：若等待 10–15 分钟重登后仍未刷新，先对照 [已付款仍显示 Free 恢复指南](https://payforgpt.com/help/chatgpt-paid-still-free-restore?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)，或凭下单邮箱与查单密码前往 [PayForGPT 订单查询页](https://payforgpt.com/order?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) 核验履约状态后联系 `siuserxiaowei` 人工排查。
+
+---
+
+## 3. WildCard / virtual card shutdown migration（停服虚拟卡与苹果内购迁移）
+
+随着 WildCard（野卡）、Dupay 等早期国内虚拟信用卡平台陆续停服或卡段失效，存量账号在迁移至新订阅前必须先清理“在途扣款锁”：
+
+| 当前账号状态 | 迁移前必做动作 | 能否保留原号聊天记录与 GPTs |
 | :--- | :--- | :--- |
-| **准备给现有账号开通/续费，担心邮箱风控或旧虚拟卡残留** | [《账号风控排雷与原虚拟卡断订平滑续费清单》](./guides/account-risk-and-outlook-precheck.md) | [充值前 30 秒账号安全自检器](https://payforgpt.com/tools/account-precheck?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) |
-| **需要公司公费报销或高校科研经费入账（怕英文 PDF 被退单）** | [《企业与高校实验室国内增值税发票报销完全指南》](./guides/domestic-vat-invoice-reimbursement.md) | [企业/个人报销开票合规自查与预算单生成器](https://payforgpt.com/tools/invoice-reimbursement-check?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) |
-| **重度使用 Codex CLI / Cloud Agent，纠结 $20、$100 还是 $200** | [《2026 Codex 共享额度机制与 Plus / 5x / 20x 选型测算》](./guides/codex-pro-100-200-selection.md) | [查看实时人民币单席价格（含 0 加点普票）](https://payforgpt.com/price?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) |
-| **研发团队 5 席及以上集中采购，需对公转账 + 6% 增值税专票** | [跳转第 3 节：数电普票 vs 6% 专票财税测算](#三企业与高校实验室报销指南为什么海外英文-pdf-invoice-总被财务退回) | [企业批量采购与 6% 专票预算试算台](https://payforgpt.com/qiye-caigou?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) |
-| **纠结选苹果礼品卡、海外卡、自助 Token 站还是免密人工核验** | [跳转第 2 节：国内主流 4 条开通路径客观横评](#二国内用户开通-chatgpt-plus--pro-的-4-条主流路径客观对比) | [多路径风险与成本完整对比页](https://payforgpt.com/compare?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) |
-| **准备联系人工专线协助开通，先核验真伪客服防李鬼** | [跳转第 4.4 节：订单凭证留存与防骗核验](#44-订单凭证留存防骗核验与客观售后边界) | [PayForGPT 唯一官方微信与身份核验](https://payforgpt.com/verify?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) |
+| **旧虚拟卡周期已到期，显示 `Free`** | 直接办理新订阅，无需换号 | ✅ 历史对话、Projects、自定义 GPTs 完整保留 |
+| **旧卡处于 `Past Due` 自动重试扣款中** | 进入 `Settings → Subscription → Cancel plan` 彻底终止旧卡续费尝试，待归零回 `Free` 再开 | ✅ 避免连续失败扣款拉黑账号 |
+| **曾在 iOS App Store 内购且未到期** | 先在 iPhone「设置 → Apple ID → 订阅」取消自动续费，**必须等到期日彻底结束、网页端回落 `Free`** 才可从外部接续 | ✅ 苹果 IAP 与网页端物理互斥，不可强行叠加 |
+
+更多迁移对比与操作细节见分册：[《账号风控排雷、Outlook 预警与原虚拟卡断订平滑续费清单》](./guides/account-risk-and-outlook-precheck.md) 与 [主流路径完整对比页](https://payforgpt.com/compare?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)。
 
 ---
 
-## 一、2026 年 ChatGPT 订阅档位全景对比与 Codex 共享额度规则
+## 4. Apple ID US Gift Card FX & tax loss vs Domestic VAT invoice（美区礼品卡隐性成本对比）
 
-自 OpenAI 将个人高阶生产力档位细化并与 **Codex（CLI 本地终端代理 + Cloud 云端异步软件工程代理）** 深度打通后，选错档位最常见的后果有两个：要么买 `Plus ($20)` 跑大型仓库重构两小时就撞上 5 小时滚动限额窗口，要么盲目上顶配造成预算浪费。
+不少用户习惯购买美区 Apple ID 礼品卡走 iOS 内购，认为“表面只要 $20”，但实际结算到团队/个人报销时会遇到三重隐性损耗：
 
-### 1.1 官方 5 大个人订阅档位核心参数横评（2026 实测口径）
+1. **汇率加价与卡商溢价**：主流合规美区礼品卡购买渠道通常包含 **8%–15%** 的汇率与手续费溢价，若不慎买到电商低价黑卡/盗刷卡，还会连带导致整个美区 Apple ID 永久封停。
+2. **美国州税与升档不便**：若美区 Apple ID 账单地址未设在免税州（如 Oregon），可能额外产生州消费税；且在 Apple 内购有效期内无法在网页端灵活升档至 `Pro 100 / Pro 200` 并开具国内税票。
+3. **财务报销硬阻断**：Apple 电子收据没有中国税务局监制章和 20 位数字电子发票号，无法用于国内企业与高校科研经费报销。
 
-| 维度 | Free（免费版） | Plus（$20 / 月） | Pro 100 / 5x 档（$100 / 月） | Pro 200 / 20x 档（$200 / 月） | Pro 500（$500 / 月） |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **官方月费** | `$0` | `$20 / 月` | `$100 / 月` | `$200 / 月` | `$500 / 月` |
-| **核心定位** | 轻度问答体验 | 日常辅助写作、检索与单文件级代码修改 | **全职工程师甜点档**：高频日常研发、中大型 PR 与深度推理 | **重度并发研发档**：多仓库并行 Codex Agent、超长上下文推理 | 极少数全天候自动化任务极客 |
-| **旗舰推理模型权限** | 受限基础体验 | 标准可用（存在明显滚动窗口配额上限） | 高优先级、大幅放宽深度思考与长上下文配额 | 极高深度推理配额，支持重度连续 Deep Research | 超高并发池（个人边际收益递减明显） |
-| **Codex (CLI + Cloud) 额度池** | 不适用主力工程任务 | 与网页端共享基础池；连续跑多文件测试修复易触发冷却 | **共享中大型工程额度池**：支撑全天常规 PR 迭代与单仓重构 | **共享重型工程额度池**：适合同时挂多个异步 Cloud Task + 本地 CLI | 超大规模连续任务池 |
-| **PayForGPT 人民币参考价（1–4 席含普票）** | — | **¥160 / 月**（0 税点加价开数电普票） | **¥849 / 月**（本站 `5x` 规格，0 加点开普票） | **¥1,499 / 月**（本站 `20x` 规格，0 加点开普票；**5 席+ ¥1,520/席含 6% 专票**） | 暂不建议普通团队采购（按 20x 多席分配更稳） |
-
-> **关键透明度说明**：上表中的 `5x`、`20x` 为 PayForGPT 站内对应的商家产品规格名称（分别用于承接 $100 档与 $200 档高频/长任务场景需求），具体对应官方计划名称、周期与实时权益边界以[实时套餐与价格页](https://payforgpt.com/price?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)及一对一专线核对为准，产品名不代表固定不变的算力倍数承诺。
-
-### 1.2 必读机制：Codex 与网页端 ChatGPT 的「双层共享配额」是怎么扣减的？
-
-很多国内工程师第一次用 `codex` CLI 时误以为“终端和网页分开算额度”，结果下午写代码突然提示限流。2026 年的实际扣减规则是：
-
-1. **同一账号全局共享额度池**：无论你在 `chatgpt.com` 网页端发起深度推理 / Deep Research，还是在本地终端通过 ChatGPT 账号登录运行 `codex` CLI，抑或在云端启动异步 `Codex Cloud` PR 任务，**消耗的都是同一个账号的订阅配额池**。
-2. **「5 小时滚动窗口 + 周度总上限」双闸门**：
-   - **短周期闸门（5 小时滚动窗口）**：防止短时间内密集并发拉爆算力。`Plus ($20)` 用户在面对包含 15+ 文件检索、多次编译报错自动重试的任务时，往往 3～6 个复杂 Task 就会触碰 5 小时窗口上限；
-   - **长周期闸门（7 天滚动配额）**：高强度全职开发一周工作 5～6 天时，`Plus` 很容易在周四、周五提前耗尽周度高质量模型配额，被迫等待重置或额外走 API 按 Token 付费。
-3. **实战选型铁律**：
-   - **只做技术问答、翻译润色、偶尔改单个函数脚本** → 选 **`Plus`（¥160/月）** 完全够用；
-   - **每天主力写业务代码、频繁用 Codex CLI 跑单仓重构与单测修复** → 选 **`Pro 100 / 5x`（¥849/月）** 性价比最高；
-   - **全天候多线程并行跑多个仓库 Agent、重度架构迁移或算法科研长时推理** → 直接上 **`Pro 200 / 20x`（单买 ¥1,499/月；团队 5 席起 ¥1,520/席含 6% 专票）**，比自己绑卡烧 API Token 省心得多。
-   - 完整 Token 成本账单对比与工作流拆解见分册：[《guides/codex-pro-100-200-selection.md》](./guides/codex-pro-100-200-selection.md)。
+对比之下，在 [PayForGPT 实时价格页](https://payforgpt.com/price?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026) 按人民币直付（`Plus` ¥160 / `5x` ¥849 / `20x` ¥1,499），**1–4 席按商品现价 0 加点直开国内增值税电子普通发票（数电普票，当天可开）**，既省去美区礼品卡折腾，又直接打通公司与实验室报销。
 
 ---
 
-## 二、国内用户开通 ChatGPT Plus / Pro 的 4 条主流路径客观对比
+## 5. Why pasting api/auth/session JSON to automated sites risks account takeover（会话凭证安全红线）
 
-自从早期国内流传的虚拟信用卡平台（如 WildCard 野卡、Dupay 等）陆续停服清退后，目前国内个人与团队把订阅开在**自己独立账号**上的主流方式共有 4 条。我们在下表中从**凭证安全性、风控稳定性、开通门槛、国内财务报销合规性**四个硬指标做中立横评：
+市面上不少“全自动秒充网站”要求用户在已登录 ChatGPT 的浏览器里打开 `https://chatgpt.com/api/auth/session`，并把返回的整段 JSON 复制粘贴到第三方表单，同时宣传“没要你密码，所以很安全”。**这是极易误导开发者的安全盲区**：
 
-| 评估维度 | 路径 ①：美区 Apple ID + App Store 礼品卡 | 路径 ②：本人海外实体银行卡（Visa / MC） | 路径 ③：粘贴 `Session Token` 的网页自助代充站 | 路径 ④：免密/零 Token 订单核验 + 一对一专线（如 PayForGPT） |
+- **Session JSON 包含有效 `accessToken`（Bearer 凭证）**：在令牌过期或被吊销前，任何拿到该 JSON 的后端服务在技术上都可以直接代表你的当前登录态调用 ChatGPT API——包括读取历史对话、工作区文件与发起计费请求。
+- **无法审计第三方日志留存**：你无法验证自助站点的反代网关日志、APM 错误追踪（如 Sentry）或备份快照是否清洗了明文 Token。对于处理公司源码、科研论文手稿或敏感数据的账号，**“既不交密码，也绝不交 `api/auth/session` JSON”** 是不可妥协的红线。
+- 核对免密与零 Token 边界详见：[Session Token 免密安全自检说明](https://payforgpt.com/ai-subscriptions/chatgpt-session-token-passwordless-safety-check?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)（English users can also review [PayForGPT EN](https://payforgpt.com/en?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)）。
+
+---
+
+## 6. Outlook / Hotmail batch email risk pre-check（批量接码邮箱风控自检）
+
+并非所有账号都适合直接投入 `5x (¥849)` 或 `20x (¥1,499)` 高阶订阅。根据工程实测，**从淘宝/发卡网几块钱买来的 `Outlook / Hotmail / Live` 批量接码成品号**是触发上游 `account deactivated` 封禁的头号重灾区：
+
+- 🟢 **低风险推荐**：本人实名注册并开启 2FA 的 `Gmail`、`Google Workspace`、正规企业/高校自定义域名邮箱、`Apple iCloud` 邮箱。
+- 🟡 **中低风险可用**：本人一手长期使用的 `QQ 邮箱` / `163 邮箱`（建议开启 ChatGPT MFA 两步验证）。
+- 🔴 **高危劝退**：电商低价购买的 `Outlook / Hotmail / Live` 批量成品号、临时一次性域名邮箱（Temp Mail）或来历不明的二手共享号。
+
+**付款前必做**：打开纯浏览器本地运行、零数据上传的 **[ChatGPT 充值前 30 秒账号风控自检器](https://payforgpt.com/tools/account-precheck?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)**，点选你的邮箱类型、登录方式与旧卡残留状态，先排除高危号风险再下单。
+
+---
+
+## 7. Codex CLI 5x (Pro 100) vs 20x (Pro 200) quota & rate limit troubleshooting（限流与选型）
+
+许多工程师第一次用 `codex` CLI 时误以为“终端额度”和“网页额度”是分开计算的，导致下午刚写几个 PR 就撞上限流。2026 年的实际规则如下：
+
+1. **网页端 + Codex CLI + Codex Cloud 共享同一个订阅额度池**，受 **5 小时滚动窗口（Burst Window）** 与 **7 天周度总配额（Weekly Pool）** 双重限制。
+2. **如何对应官方档位与 PayForGPT 商品规格**：
+
+| OpenAI 官方参考档位 | 官方参考月费 | PayForGPT 商品名 | 1–4 席人民币含普票参考价 | 适用研发强度 |
 | :--- | :--- | :--- | :--- | :--- |
-| **是否需要交账号密码** | 不需要 | 不需要 | 不需要明文密码，**但需交完整登录会话 JSON** | **不需要密码，也绝不索要任何 Session 凭证** |
-| **是否触碰 `api/auth/session` 登录态** | 否（走苹果 IAP 官方内购） | 否（本人浏览器直连 Stripe） | **是（要求复制整段含 `accessToken` 的 JSON 上传）** | **否（物理隔离会话凭证，杜绝登录态泄露）** |
-| **主要操作门槛** | 需自备纯净美区 Apple ID + 靠谱美区礼品卡 + iOS 设备；订阅在途时无法在网页端直接升降级 | 绝大多数国内用户无合规海外实体卡與海外账单地址；普通双币卡 99% 被 Stripe 拒付 | 网页自助粘贴 JSON，到账较快（通常数分钟），但将有效会话令牌暴露给第三方服务端 | 在线用**支付宝或对公转账**建单，加官方微信 `siuserxiaowei` 一对一协助开通（微信仅用于联系，不支持微信支付） |
-| **上游风控与安全隐患** | 买到黑卡/盗刷来源礼品卡会导致整个 Apple ID 永久封停；汇率与卡商溢价约 8%–15% | 本人真实海外卡极稳；但若误用劣质 U 卡/虚拟卡段，极易触发 `Card Declined` 连坐风控 | 1) `accessToken` 在有效期内可读写账号对话与工作区数据；<br>2) 若自助站后端混用高危卡池，易引发批量掉订阅 | 前置排查高危邮箱与旧卡绑定冲突，按单人独立本人账号合规协助开通 |
-| **发票与国内报销能力** | ❌ 仅有 Apple 电子收据，**无国内税局监制章，企业/高校财务基本不认** | ❌ 仅有 Stripe 英文商业 PDF Invoice，**无 20 位数电票号，无法抵扣进项税** | ❌ 仅提供境外英文商业 PDF 收据，**明确不支持国内增值税发票** | ✅ **1–4 席按原价 0 加点开国内增值税数电普票；20x 满 5 席起开 6% 增值税专票 + 对公转账 + 签合同** |
-| **最适合谁** | 手头已有老牌美区 Apple ID、纯个人自费、且只买 `$20 Plus` 的 iPhone 用户 | 长期旅居海外、持有本人境外银行卡且无需国内公司报销的个人 | 仅图半夜全自助、不在意会话令牌短暂托管、且完全不需要国内发票的个人测试号 | **重视主力账号数据隐私（不交密码/不交 Token）、原虚拟卡断订老用户、以及一切需要国内普票/专票报销的工程师与企业团队** |
+| **ChatGPT Plus** | ~$20 / 月 | **ChatGPT Plus** | **¥160 / 月** | 轻度问答、单文件脚本与偶尔代码辅助 |
+| **ChatGPT Pro 100** | $100 / 月 | **ChatGPT 5x** | **¥849 / 月** | 全职前后端/全栈主力：每天 5–12 个 Codex CLI 任务、单仓重构 |
+| **ChatGPT Pro 200** | $200 / 月 | **ChatGPT 20x** | **¥1,499 / 月**（5 席+ **¥1,520/席**含 6% 专票） | 重度并发架构师：多仓库 Worktree 并行 Codex Agent 与长时推理 |
 
-### 🔍 技术深挖：为什么很多安全工程师拒绝向陌生网站粘贴 `chatgpt.com/api/auth/session`？
-
-市面上不少“全自动秒到账代充站”会引导你在已登录 ChatGPT 的浏览器里访问 `https://chatgpt.com/api/auth/session`，把页面返回的整段 JSON 复制粘贴进他们的输入框，并宣传“这不是密码，很安全”。
-
-从 Web 安全工程视角看，开发者必须清楚这串 JSON 到底包含什么：
-1. **它包含当前会话的 Bearer `accessToken` 与账户元数据**：虽然它确实不是你的邮箱明文密码，但只要该 `accessToken` 尚未过期或吊销，持有它的后端服务器在技术上就拥有与你浏览器当前登录态等效的 API 调用权限（包括读取历史会话列表、个人信息及发起订阅结账请求）。
-2. **黑盒日志留存不可验证**：尽管代充站通常声称“充值完成后立即删除、AES 加密”，但作为外部用户，你无法审计其 Nginx 反代日志、报错监控（如 Sentry）或数据库备份中是否残留了未脱敏的 `accessToken`。如果你的 ChatGPT 里存有公司核心业务代码、未公开论文手稿或客户隐私数据，**“既不交密码，也不交 `api/auth/session` 会话 JSON”** 才是符合企业信息安全红线的做法。
-3. 想系统对比原虚拟卡迁移与各渠道差异，也可参考[主流充值与续费路径完整横评](https://payforgpt.com/compare?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)。
+> **名词口径说明**：`5x` 与 `20x` 为 PayForGPT 沿用的商家商品规格名称（分别对应承接 $100 Pro 100 与 $200 Pro 200 高阶需求），不代表固定不变的算力倍数承诺；PayForGPT 不销售 Pro 500、Go 档、Team/Business 工作区或 Credits。详细工作流对比与省额度技巧见 [Codex 选型测算分册](./guides/codex-pro-100-200-selection.md) 及 [Codex 配额与重置排查指南](https://payforgpt.com/ai-subscriptions/codex-usage-limit-reset-plus-pro-guide?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)。
 
 ---
 
-## 三、企业与高校实验室报销指南：为什么海外英文 PDF Invoice 总被财务退回？
+## 8. China 0%-markup digital VAT ordinary invoice vs 6% special VAT invoice for 5+ seats（国内普票与专票）
 
-在国内科技公司、国央企研究院、高校课题组（横向/纵向经费）采购 ChatGPT 或 Codex 时，**“买得到”和“报销得下来”完全是两码事**。超过 80% 第一次拿海外收据去报销的研发人员都会在财务审核环节碰壁。
+国内公司财务与高校科研经费退回海外英文 PDF Receipt 的四大原因：**① 无国家税务总局监制章与 20 位数电票号；② 无法在增值税查验平台验真；③ 一般纳税人无法抵扣进项税；④ 非本人外币公务卡付款缺少人民币合规闭环**。
 
-### 3.1 国内财务退回「海外英文商业 PDF Invoice」的 4 个硬伤
+| 采购规模 | 开具发票类型 | 含税价格与税点政策 | 付款与签约方式 |
+| :--- | :--- | :--- | :--- |
+| **个人报销 / 1–4 席小团队** | **国内增值税电子普通发票（数电普票）** | `Plus` **¥160** / `5x` **¥849** / `20x` **¥1,499**，**按商品现价 0% 加点直开，当天开出**（零售单如需专票需另加税点，请加微信确认） | 支付宝或对公转账 → 加官方微信 `siuserxiaowei` 一对一免密开通 |
+| **企业研发团队批量集采（`20x` 5 席起）** | **国内 6% 增值税专用发票（数电专票）** | **¥1,520 / 席 / 月**（**已含 6% 专票税费**；一般纳税人抵扣 ¥86.04 进项税后，**税后净成本约 ¥1,433.96 / 席**） | 支持**公对公银行转账**、**当天完成电子签或盖章 PDF 采购合同**，按成员名单各自独立账号开通 |
 
-无论你是自己绑海外卡在 Stripe 下载的 PDF，还是在境外自助代充站用户中心下载的英文 Invoice，在《中华人民共和国发票管理办法》与国内企事业单位报销制度下都有明显缺陷：
-
-1. **非税务机关监制票据**：英文商业 Invoice 本质是境外商家的“商业账单/收款凭证”，既没有「全国统一发票监制章」，也没有国内 **20 位数字电子发票号码（数电票号）**，财务人员无法在「国家税务总局全国增值税发票查验平台」验真入账。
-2. **无法抵扣一般纳税人增值税进项**：企业若为增值税一般纳税人，海外英文 PDF 无法用于认证抵扣 6% 进项税额；若强行按跨境技术服务费走对公付汇，还需去税务局办理繁琐的代扣代缴增值税及附加税申报，单笔几百几千元的软件订阅根本不值得财务专门跑一趟流程。
-3. **缺少本人外币公务卡流水闭环**：高校与科研院所如果破例报销境外小额英文账单，通常强制要求提供“课题组成员本人名下外币信用卡扣款账单 + 购汇水单 + 情况说明 + 院长/处长特批签字”，任何找人代付或礼品卡充值的记录都会因“付款人与报销人不一致、无合规税票”直接退单。
-4. **报销类目与币种不兼容**：许多企业 OA 费控系统（如每刻、分贝通、用友、金蝶）强制校验发票 XML / PDF 元数据中的购买方纳税人识别号（税号）与人民币大写金额，纯英文美元账单根本无法通过系统自动验真关卡。
-
-### 3.2 国内正规数电普票 vs 6% 增值税专票：采购方案与到手净成本表
-
-针对国内个人公费报销与研发团队集中采购，PayForGPT 提供了完全闭环的国内税务合规发票支持（在线支持**支付宝**与**对公银行转账**，可配合签署采购合同）：
-
-| 采购规模与场景 | 适用发票类型 | 覆盖档位与含税人民币价格 | 开票加点与实测净成本 | 付款与交付方式 |
-| :--- | :--- | :--- | :--- | :--- |
-| **个人公费报销 / 小微团队零星采购（1–4 席）** | **国内增值税电子普通发票（数电普票）** | • `ChatGPT Plus`：**¥160 / 月**<br>• `ChatGPT 5x`（对齐 $100 档）：**¥849 / 月**<br>• `ChatGPT 20x`（对齐 $200 档）：**¥1,499 / 月** | **0% 税点加价**（直接按页面原价开具正规国内数电普票，当天可开，全国税局可查验） | 支付宝或对公转账付款 → 加微信 `siuserxiaowei` 一对一免密开通本人独立账号 |
-| **企业研发团队批量集采（`20x` 5 席及以上）** | **国内 6% 增值税专用发票（数电专票）** | • `ChatGPT 20x`（5 席起批）：**¥1,520 / 席 / 月**（已含 6% 专票税点） | 一般纳税人企业抵扣 6% 进项税后，**企业实际税后净成本仅约 ¥1,433.96 / 席**，还支持签合同走对公请款 | 支持**公对公银行转账**（对公账户在核验后的官方微信内获取）或支付宝 → 按每人本人账号分别独立交付 |
-
-### 3.3 发给公司财务 / 课题组秘书的一句话确认清单
-
-在向主管或财务提单前，你可以先用在线工具 **[ChatGPT 企业/个人报销开票合规自查与预算单生成器](https://payforgpt.com/tools/invoice-reimbursement-check?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)** 一键生成带抬头和金额明细的《AI 订阅采购与国内开票说明单》（纯浏览器本地生成，不上传公司信息），或者直接前往 **[企业采购与预算试算工作台](https://payforgpt.com/qiye-caigou?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)** 核算多席位总价。
-
-完整开票科目建议、财务沟通话术与高校科研报销避坑细节，请阅读分册：[《guides/domestic-vat-invoice-reimbursement.md》](./guides/domestic-vat-invoice-reimbursement.md)。
+- 开票前 10 秒先用 **[报销开票合规自查与预算单生成器](https://payforgpt.com/tools/invoice-reimbursement-check?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)** 生成发给财务审批的规范说明；
+- 需要多席位预算核算或提交企业采购单，请前往 **[企业采购与预算试算台](https://payforgpt.com/qiye-caigou#procurement-calculator)**（完整入口：[PayForGPT 企业采购页](https://payforgpt.com/qiye-caigou?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)），并阅读分册 [《企业与高校实验室国内增值税发票报销完全指南》](./guides/domestic-vat-invoice-reimbursement.md)。
 
 ---
 
-## 四、充值前必做：账号健康度与防封风控自查清单（4 步排雷）
+## 9. Account deactivated 与多人共用账号防封边界
 
-绝大多数所谓的“充完没几天被封号”或“卡在订阅状态异常”，根源并不是充值动作本身，而是**账号底子本身属于黑灰产接码号**或**旧虚拟卡残留在途账单冲突**。付款前花 30 秒按下面 4 步自查，可以避开 95% 的无谓损失（也可以直接在网页端使用纯本地运行的 **[30 秒账号安全与风控自检工具](https://payforgpt.com/tools/account-precheck?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)**）：
-
-### 4.1 第一查：邮箱后缀风险分级（警惕微软系批量接码号！）
-
-- 🟢 **安全推荐（优先作为主力生产力大号）**：
-  - 本人实名注册并开启两步验证（2FA）的 **`Gmail`** 或 **`Google Workspace` 企业邮箱**；
-  - **`Apple iCloud`** 邮箱；
-  - 正规公司/高校自定义域名邮箱（非临时域名）；
-  - 本人长期正常使用的 **`QQ 邮箱` / `163 邮箱`**。
-- 🔴 **高危预警（`Outlook / Hotmail / Live / MSN` 成品号慎充高价档！）**：
-  - 微软系免费邮箱本身并非不能用，但由于其早期注册无需手机号验证，成为全球卡商与号商**脚本批量机刷、接码注册成品号**的最大温床。
-  - 如果你的 `Outlook / Hotmail / Live` 账号是从第三方电商店铺几块钱买来的“现成号”，或者从未绑定本人辅助安全验证信息，一旦发生跨区账单变动或升级 `$100 / $200` 高阶套餐，极易触发 OpenAI 自动化反欺诈模型的秋后算账（`account deactivated`）。**强烈建议在投入 `5x / 20x` 重资产订阅前，换用本人一手注册的 Gmail 或企业邮箱账号！**
-
-### 4.2 第二查：原 WildCard（野卡）等停服虚拟卡与 App Store 在途订阅清理
-
-1. **曾绑过已停服虚拟卡（如 WildCard、Dupay 等）的老账号**：
-   - 先登录 `chatgpt.com` → 左下角个人头像 → `Settings` / `My plan` 查看当前状态。
-   - 如果旧周期已完全结束、当前显示为普通 **`Free`** 状态，且没有挂起（Past Due / Unpaid）的扣款重试锁单，即可正常通过免密人工专线平滑接续新订阅。
-   - 若后台仍显示自动续费未取消，先点击 `Manage my subscription` → `Cancel plan`，确保旧虚拟卡不再反复发起失败扣款（连续多次 `Card Declined` 会显著拉高账户 Stripe 风险分）。
-2. **曾在 iPhone / iPad 通过 App Store 内购订阅的账号**：
-   - 只要苹果内购订阅**仍在有效期内**，OpenAI 账单控制权就锁定在 Apple 渠道，任何外部渠道都无法直接叠加开通。必须先在 iOS「设置 → Apple ID → 订阅」中取消自动续费，**等当前周期自然到期、账号彻底变回 `Free` 后**，再办理网页端新订阅。
-
-### 4.3 第三查：网络环境卫生
-
-- 避免使用免费公共代理、万人骑低价机场节点或频繁在 10 分钟内跨多个大洲跳变出口 IP；
-- 团队采购务必坚持 **「一人一席、各自使用本人独立账号」**，严禁 5～10 个人共用同一个 `Plus` 或 `20x` 账号同时异地登录并发刷 Codex——多人异地高频共享必触发异常登录与算力滥用风控。
-
-### 4.4 订单凭证留存、防骗核验与客观售后边界
-
-无论在何时办理订阅，请养成工程化留痕习惯：
-
-1. **留存四要素**：在官网创建订单后，立即保存 **① 下单邮箱、② 订单号、③ 查单密码（仅在官网 HTTPS `/order` 页自查使用，切勿发给客服或任何第三方）、④ 支付宝/银行转账回单截图**。
-2. **防李鬼身份核验**：PayForGPT 仅支持**支付宝**与**人工/对公银行转账**（微信目前不能付款），付款后联系**唯一官方微信号 `siuserxiaowei`** 一对一专线协助开通。官方客服**绝不会主动加你好友**，**绝不会索要你的 ChatGPT 密码**，**绝不会让你发送 `api/auth/session` 登录凭证**，对公收款账户也仅在核验后的官方微信内提供。操作前请先访问 **[品牌与客服身份核验页](https://payforgpt.com/verify?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)** 二次确认。
-3. **拒绝虚假承诺，认清真实客观售后边界**：
-   - 市面上凡是宣称“随便造、无条件永久包赔、封号无脑全退”的，往往是卖多人拼车共享号或随时准备跑路的个人号商。
-   - PayForGPT 执行透明可核验的客观条款：**充值失败全额退款**；自付款当天起 30 天内若出现**非账号自身原因**导致的掉订阅，可联系一对一专线免费补开同一套餐一次（若无法补开则按剩余天数折算退款）；但**因多人共用账号、使用接码黑号、或违反 OpenAI 服务条款导致的上游封号**，属于账号自身与第三方平台规则范畴，不支持免费补开或无理由退款，需由账号持有人向 OpenAI 官方提交申诉。
-
-更详细的排雷步骤与异常报错（如“付完款仍显示 Free”的 3 分钟缓存刷新法）请查阅分册：[《guides/account-risk-and-outlook-precheck.md》](./guides/account-risk-and-outlook-precheck.md)。
+1. **严禁多人共用一个 `Plus` 或 `20x` 席位**：多台设备在不同省市 IP 下并发跑 `Codex CLI` 或网页推理，会直接触发 OpenAI 异常登录与算力滥用拦截（`Your account has been deactivated`）。企业采购必须坚持 **「一人一独立本人账号」**。
+2. **禁止使用个人订阅逆向转接生产 API**：把网页/CLI 订阅当成高并发生产后端网关调用属于明确违规行为，生产系统应使用官方按量付费 API Platform。
+3. 若遇到非黑号误判停用，请由账号持有人通过 `help.openai.com` 官方申诉通道处理。所有本地排查工具均汇总在 [PayForGPT 免费本地工具集](https://payforgpt.com/tools?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)。
 
 ---
 
-## 五、分册导航（深度实战文档）
+## 10. QQ / 163 邮箱串号登录与 Codex 手机验证排查
 
-1. 📄 **[《企业与高校实验室国内增值税发票报销完全指南》](./guides/domestic-vat-invoice-reimbursement.md)**  
-   详解海外英文 PDF Invoice 被退单原因、数电普票（0 加点）与 6% 增值税专票（20x 5 席起 ¥1,520/席）税后成本精算、高校横向/纵向经费入账要点及发给财务的审批模板。
-2. 🛡️ **[《账号风控排雷、Outlook 预警与原虚拟卡断订续费清单》](./guides/account-risk-and-outlook-precheck.md)**  
-   详解邮箱域名安全等级、停服虚拟卡（WildCard 等）老账号解绑接续步骤、`api/auth/session` 泄露风险剖析及付款后常见状态排查。
-3. ⚡ **[《2026 Codex 共享额度机制与 Plus / Pro 100 (5x) / Pro 200 (20x) 选型测算》](./guides/codex-pro-100-200-selection.md)**  
-   面向一线全栈/AI 工程师的真实工作负载基准测试、5 小时滚动窗口与周限额拆解、包月订阅 vs API 按量计费 ROI 对比。
+- **QQ / 163 邮箱登录失败或串号**：国内用户使用 QQ 或 163 邮箱注册时，请固定选择「输入邮箱 + 密码」登录，避免误触其他快捷登录按钮。若未收到一次性验证码，请检查邮箱垃圾箱、拦截规则及域名白名单（`@openai.com`）。
+- **Codex CLI 首次使用手机/安全验证**：国内企业或个人账号在终端执行 `codex login`（或远程 SSH 环境使用 `codex login --device-auth`）时，请提前确保账号已开启 MFA 两步验证且当前网络环境稳定（避免 10 分钟内跨多国跳转节点）。
 
 ---
 
-## 六、更新与核实记录
+## 11. 取消自动续费、升档覆盖规则与已开发票红冲流程
 
-| 日期 | 核实与更新内容 |
-| :--- | :--- |
-| **2026-11** | 全面对齐 2026 四季度最新套餐结构（Plus / Pro 100·5x / Pro 200·20x / Pro 500）与 Codex CLI + Cloud 共享额度池机制；核实国内数电普票（1–4 席 0 加点：¥160 / ¥849 / ¥1,499）与 6% 增值税专票（20x 5 席+ ¥1,520/席 + 对公转账）最新政策；补充微软系接码邮箱与 `api/auth/session` 安全审计章节。 |
+1. **取消自动续费**：在周期结束前于 `chatgpt.com` → `Settings` → `Subscription` → `Manage my subscription` 点击 `Cancel plan`，取消后当前已付周期的剩余天数仍可正常使用，到期自动回落 `Free`。
+2. **`Plus → Pro` 或 `5x → 20x` 升档规则**：跨渠道（例如 Apple IAP 有效期内）不能直接在网页端叠加升档，需等当前周期彻底到期回落 `Free` 后再切换新档位。
+3. **合规退订与发票红冲**：符合退款条件的订单若尚未开票可直接按规则办理退款；若已开具国内数电增值税发票且发生合规退订，须配合提供收票方信息按国家税务规范开具红字发票（红冲）后完成退款清算。
 
 ---
 
-## 开源许可
+## 12. 订单凭证核验、唯一官方微信防骗与 30 天售后边界
 
-本指南仓库文档内容采用 [CC BY 4.0（知识共享 署名 4.0 国际许可协议）](./LICENSE) 发布。欢迎研发团队内部 Wiki 引用、高校实验室报销指南转载（请保留出处署名）。如发现政策变动或有补充排障经验，欢迎提交 Issue 或 Pull Request！
+为了杜绝假冒客服与虚假承诺，办理前请逐条核对以下硬事实：
+
+1. **支付与联系通道**：PayForGPT 仅支持官网收银台**支付宝**（跳转第三方支付宝收银页属正常流程）与**人工/对公银行转账**；**微信目前不能付款**，唯一官方微信号 **`siuserxiaowei`** 仅用于付款后一对一免密协助开通与开票对接（**不会主动加你好友**，对公银行账户仅在核验后的官方微信内提供）。
+2. **身份核验与查单**：添加微信或大额打款前先访问 **[PayForGPT 品牌与客服身份核验页](https://payforgpt.com/verify?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)**；订单进度凭下单邮箱 + 查单密码在 **[订单查询页](https://payforgpt.com/order?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)** 自查（**切勿把查单密码发给任何人**）。
+3. **真实售后与退款边界（[完整退款条款](https://payforgpt.com/refund?utm_source=github&utm_medium=readme&utm_campaign=china-invoice-guide-2026)）**：
+   - 充值失败 / 未开通：**全额退款**；
+   - 自付款当天起 **30 天内**，若出现**非账号自身原因**导致的掉订阅，支持**免费补开同一套餐一次**；若无法补开，则按**剩余未使用天数折算退款**；
+   - 因使用接码黑号、多人共用账号或违反 OpenAI 使用条款导致的封禁，不支持免费补开或无条件“封号全赔”。
+
+---
+
+## 📚 分册导航（Deep-Dive Guides）
+
+- 📄 **[《企业与高校实验室国内增值税发票报销完全指南》](./guides/domestic-vat-invoice-reimbursement.md)**（中文财税与审批模板）
+- 🛡️ **[《账号风控排雷、Outlook 预警与原虚拟卡断订续费清单》](./guides/account-risk-and-outlook-precheck.md)**（中文账号体检指南）
+- ⚡ **[《2026 Codex 共享额度机制与 Plus / 5x / 20x 选型测算》](./guides/codex-pro-100-200-selection.md)**（中文配额与 ROI 对比）
+- 🌐 **[English Deep-Dive Troubleshooting Reference](./guides/troubleshooting-errors-en.md)**（English Error Codes, Session Security & China VAT Procurement）
+
+---
+
+## 开源许可 / License
+
+本仓库所有文档采用 [CC BY 4.0（知识共享 署名 4.0 国际许可协议）](./LICENSE) 发布。欢迎技术团队内部 Wiki 引用、高校实验室报销说明转载，并欢迎通过 Issue / PR 补充最新排查实测记录。

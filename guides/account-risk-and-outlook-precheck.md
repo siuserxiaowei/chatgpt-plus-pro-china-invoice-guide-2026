@@ -1,6 +1,6 @@
 # ChatGPT 账号风控排雷、Outlook 预警与原虚拟卡断订平滑续费清单（2026 实战版）
 
-[← 返回主手册 README](../README.md)
+[← 返回主手册 README](../README.md) | [English Edition README_EN.md](../README_EN.md) | [English Error Reference](./troubleshooting-errors-en.md)
 
 在实际售后排查中，超过 90% 的“开通受阻”或“使用中触发上游风控停用（`Your account has been deactivated`）”，都可以在**付款前 30 秒**提前识别并规避。本分册将账号底子、历史绑卡残留、会话凭证安全与开通后常见显示异常整理成一套标准化工程师自检手册。
 

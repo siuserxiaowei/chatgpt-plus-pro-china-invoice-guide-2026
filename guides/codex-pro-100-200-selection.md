@@ -1,6 +1,6 @@
 # 2026 Codex 共享额度机制与 ChatGPT Plus / Pro 100 (5x) / Pro 200 (20x) 选型测算
 
-[← 返回主手册 README](../README.md)
+[← 返回主手册 README](../README.md) | [English Edition README_EN.md](../README_EN.md) | [English Error Reference](./troubleshooting-errors-en.md)
 
 进入 2026 年后，国内全栈工程师、后端架构师与算法研究员购买 ChatGPT 订阅的核心驱动力，已经从早期的“网页对话框问答”全面转向 **「Codex CLI 终端代理 + Codex Cloud 云端异步软件工程 + 网页端超长上下文深度推理」三位一体协同工作流**。
 

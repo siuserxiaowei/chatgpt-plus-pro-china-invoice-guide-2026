@@ -1,6 +1,6 @@
 # 企业与高校实验室 ChatGPT / Codex 国内增值税发票报销完全指南（2026 财税合规版）
 
-[← 返回主手册 README](../README.md)
+[← 返回主手册 README](../README.md) | [English Edition README_EN.md](../README_EN.md) | [English Error Reference](./troubleshooting-errors-en.md)
 
 在国内科技企业、国有科研院所与高校实验室（横向课题 / 纵向基金）的实际研发工作中，ChatGPT Plus / Pro 与 Codex 已成为核心生产力工具。然而，大量工程师和课题组学生在自行购买后拿去财务处报销时，却因为 **「只有海外英文商业 PDF Invoice，没有国内税务局监制发票」** 而被直接退单，最终只能自掏腰包。
 
